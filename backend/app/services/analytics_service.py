@@ -89,7 +89,16 @@ def get_heatmap_data(user_id: str, db: Session) -> list:
     for i in range(365):
         d = since + timedelta(days=i)
         count = counts.get(str(d), 0)
-        level = 0 if count == 0 else (1 if count <= 2 else (2 if count <= 4 else (3 if count <= 6 else 4)))
+        if count == 0:
+            level = 0
+        elif count <= 2:
+            level = 1
+        elif count <= 4:
+            level = 2
+        elif count <= 6:
+            level = 3
+        else:
+            level = 4
         result.append({"date": str(d), "count": count, "level": level})
 
     return result

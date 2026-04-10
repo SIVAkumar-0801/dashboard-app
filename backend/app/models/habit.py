@@ -2,33 +2,7 @@ import uuid
 from datetime import datetime, date, timezone
 from sqlalchemy import Column, String, Integer, Boolean, DateTime, Date, ForeignKey, Float
 from sqlalchemy.orm import relationship
-from sqlalchemy.types import TypeDecorator, CHAR
-from sqlalchemy.dialects.postgresql import UUID as PG_UUID
-from ..database import Base
-
-
-class GUID(TypeDecorator):
-    impl = CHAR
-    cache_ok = True
-
-    def load_dialect_impl(self, dialect):
-        if dialect.name == "postgresql":
-            return dialect.type_descriptor(PG_UUID())
-        return dialect.type_descriptor(CHAR(36))
-
-    def process_bind_param(self, value, dialect):
-        if value is None:
-            return value
-        if dialect.name == "postgresql":
-            return str(value)
-        if not isinstance(value, uuid.UUID):
-            return str(uuid.UUID(str(value)))
-        return str(value)
-
-    def process_result_value(self, value, dialect):
-        if value is None:
-            return value
-        return str(value)
+from ..database import Base, GUID
 
 
 class Habit(Base):
