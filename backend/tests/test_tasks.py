@@ -42,7 +42,7 @@ def test_list_tasks_empty():
     assert response.json() == []
 
 
-def test_create_task():
+def _create_task() -> str:
     payload = {
         "title": "Write tests",
         "description": "Write unit tests for the API",
@@ -59,22 +59,26 @@ def test_create_task():
     return data["id"]
 
 
+def test_create_task():
+    _create_task()
+
+
 def test_get_task():
-    task_id = test_create_task()
+    task_id = _create_task()
     response = client.get(f"/api/tasks/{task_id}")
     assert response.status_code == 200
     assert response.json()["id"] == task_id
 
 
 def test_update_task():
-    task_id = test_create_task()
+    task_id = _create_task()
     response = client.put(f"/api/tasks/{task_id}", json={"title": "Updated title"})
     assert response.status_code == 200
     assert response.json()["title"] == "Updated title"
 
 
 def test_update_task_status():
-    task_id = test_create_task()
+    task_id = _create_task()
     response = client.put(f"/api/tasks/{task_id}/status", json={"status": "completed"})
     assert response.status_code == 200
     data = response.json()
@@ -83,14 +87,14 @@ def test_update_task_status():
 
 
 def test_delete_task():
-    task_id = test_create_task()
+    task_id = _create_task()
     response = client.delete(f"/api/tasks/{task_id}")
     assert response.status_code == 204
     assert client.get(f"/api/tasks/{task_id}").status_code == 404
 
 
 def test_filter_tasks_by_status():
-    test_create_task()
+    _create_task()
     response = client.get("/api/tasks/?status=todo&user_id=test_user")
     assert response.status_code == 200
     for task in response.json():
@@ -98,7 +102,7 @@ def test_filter_tasks_by_status():
 
 
 def test_task_stats():
-    test_create_task()
+    _create_task()
     response = client.get("/api/tasks/stats/summary?user_id=test_user")
     assert response.status_code == 200
     data = response.json()

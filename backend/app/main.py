@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Dict
@@ -6,10 +7,18 @@ import json
 from .database import create_tables
 from .routes import habits, routines, tasks, analytics
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_tables()
+    yield
+
+
 app = FastAPI(
     title="Dashboard API",
     description="Backend API for the custom dashboard application",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 app.add_middleware(
@@ -71,8 +80,3 @@ def root():
 @app.get("/health")
 def health_check():
     return {"status": "healthy"}
-
-
-@app.on_event("startup")
-def startup_event():
-    create_tables()

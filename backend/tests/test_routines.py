@@ -42,7 +42,7 @@ def test_list_routines_empty():
     assert response.json() == []
 
 
-def test_create_routine():
+def _create_routine() -> str:
     payload = {
         "name": "Morning Workout",
         "description": "30 min workout",
@@ -60,36 +60,40 @@ def test_create_routine():
     return data["id"]
 
 
+def test_create_routine():
+    _create_routine()
+
+
 def test_get_routine():
-    routine_id = test_create_routine()
+    routine_id = _create_routine()
     response = client.get(f"/api/routines/{routine_id}")
     assert response.status_code == 200
     assert response.json()["id"] == routine_id
 
 
 def test_update_routine():
-    routine_id = test_create_routine()
+    routine_id = _create_routine()
     response = client.put(f"/api/routines/{routine_id}", json={"duration_minutes": 45})
     assert response.status_code == 200
     assert response.json()["duration_minutes"] == 45
 
 
 def test_delete_routine():
-    routine_id = test_create_routine()
+    routine_id = _create_routine()
     response = client.delete(f"/api/routines/{routine_id}")
     assert response.status_code == 204
     assert client.get(f"/api/routines/{routine_id}").status_code == 404
 
 
 def test_routine_check_in():
-    routine_id = test_create_routine()
+    routine_id = _create_routine()
     response = client.post(f"/api/routines/{routine_id}/check-in?user_id=test_user")
     assert response.status_code == 201
     assert response.json()["routine_id"] == routine_id
 
 
 def test_routine_check_in_duplicate():
-    routine_id = test_create_routine()
+    routine_id = _create_routine()
     client.post(f"/api/routines/{routine_id}/check-in?user_id=test_user")
     response = client.post(f"/api/routines/{routine_id}/check-in?user_id=test_user")
     assert response.status_code == 400

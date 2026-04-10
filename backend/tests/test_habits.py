@@ -54,7 +54,7 @@ def test_list_habits_empty():
     assert response.json() == []
 
 
-def test_create_habit():
+def _create_habit() -> str:
     payload = {
         "name": "Morning Run",
         "description": "Run 5km every morning",
@@ -72,22 +72,26 @@ def test_create_habit():
     return data["id"]
 
 
+def test_create_habit():
+    _create_habit()
+
+
 def test_get_habit():
-    habit_id = test_create_habit()
+    habit_id = _create_habit()
     response = client.get(f"/api/habits/{habit_id}")
     assert response.status_code == 200
     assert response.json()["id"] == habit_id
 
 
 def test_update_habit():
-    habit_id = test_create_habit()
+    habit_id = _create_habit()
     response = client.put(f"/api/habits/{habit_id}", json={"name": "Evening Run"})
     assert response.status_code == 200
     assert response.json()["name"] == "Evening Run"
 
 
 def test_delete_habit():
-    habit_id = test_create_habit()
+    habit_id = _create_habit()
     response = client.delete(f"/api/habits/{habit_id}")
     assert response.status_code == 204
     response = client.get(f"/api/habits/{habit_id}")
@@ -95,21 +99,21 @@ def test_delete_habit():
 
 
 def test_habit_check_in():
-    habit_id = test_create_habit()
+    habit_id = _create_habit()
     response = client.post(f"/api/habits/{habit_id}/check-in?user_id=test_user")
     assert response.status_code == 201
     assert response.json()["habit_id"] == habit_id
 
 
 def test_habit_check_in_duplicate():
-    habit_id = test_create_habit()
+    habit_id = _create_habit()
     client.post(f"/api/habits/{habit_id}/check-in?user_id=test_user")
     response = client.post(f"/api/habits/{habit_id}/check-in?user_id=test_user")
     assert response.status_code == 400
 
 
 def test_habit_stats():
-    habit_id = test_create_habit()
+    habit_id = _create_habit()
     response = client.get(f"/api/habits/{habit_id}/stats")
     assert response.status_code == 200
     data = response.json()
