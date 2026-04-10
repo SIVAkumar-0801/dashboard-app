@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import StatementError
-from datetime import datetime, date
+from datetime import datetime, date, timezone
 from typing import List, Optional
 
 from ..database import get_db
@@ -61,7 +61,7 @@ def update_habit(habit_id: str, habit_in: HabitUpdate, db: Session = Depends(get
         raise HTTPException(status_code=404, detail="Habit not found")
     for field, value in habit_in.model_dump(exclude_unset=True).items():
         setattr(habit, field, value)
-    habit.updated_at = datetime.utcnow()
+    habit.updated_at = datetime.now(timezone.utc)
     db.commit()
     db.refresh(habit)
     return enrich_habit(habit, db)
@@ -104,7 +104,7 @@ def check_in_habit(
         user_id=user_id,
         notes=notes,
         date=today,
-        completed_at=datetime.utcnow(),
+        completed_at=datetime.now(timezone.utc),
     )
     db.add(log)
     db.commit()

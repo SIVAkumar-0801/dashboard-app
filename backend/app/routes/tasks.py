@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import StatementError
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 
 from ..database import get_db
@@ -68,10 +68,10 @@ def update_task(task_id: str, task_in: TaskUpdate, db: Session = Depends(get_db)
         raise HTTPException(status_code=404, detail="Task not found")
     updates = task_in.model_dump(exclude_unset=True)
     if "status" in updates and updates["status"] == "completed" and task.status != "completed":
-        updates["completed_at"] = datetime.utcnow()
+        updates["completed_at"] = datetime.now(timezone.utc)
     for field, value in updates.items():
         setattr(task, field, value)
-    task.updated_at = datetime.utcnow()
+    task.updated_at = datetime.now(timezone.utc)
     db.commit()
     db.refresh(task)
     return task
@@ -98,9 +98,9 @@ def update_task_status(task_id: str, status_in: TaskStatusUpdate, db: Session = 
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
     if status_in.status == "completed" and task.status != "completed":
-        task.completed_at = datetime.utcnow()
+        task.completed_at = datetime.now(timezone.utc)
     task.status = status_in.status
-    task.updated_at = datetime.utcnow()
+    task.updated_at = datetime.now(timezone.utc)
     db.commit()
     db.refresh(task)
     return task

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import StatementError
-from datetime import datetime, date
+from datetime import datetime, date, timezone
 from typing import List, Optional
 
 from ..database import get_db
@@ -57,7 +57,7 @@ def update_routine(routine_id: str, routine_in: RoutineUpdate, db: Session = Dep
         raise HTTPException(status_code=404, detail="Routine not found")
     for field, value in routine_in.model_dump(exclude_unset=True).items():
         setattr(routine, field, value)
-    routine.updated_at = datetime.utcnow()
+    routine.updated_at = datetime.now(timezone.utc)
     db.commit()
     db.refresh(routine)
     return enrich_routine(routine, db)
@@ -104,7 +104,7 @@ def check_in_routine(
         user_id=user_id,
         notes=notes,
         date=today,
-        completed_at=datetime.utcnow(),
+        completed_at=datetime.now(timezone.utc),
     )
     db.add(log)
     db.commit()

@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime, date
+from datetime import datetime, date, timezone
 from sqlalchemy import Column, String, Integer, Boolean, DateTime, Date, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.types import TypeDecorator, CHAR
@@ -42,8 +42,8 @@ class Routine(Base):
     duration_minutes = Column(Integer, default=30)
     days_of_week = Column(String, default="1,2,3,4,5")  # comma-separated like "1,2,3,4,5"
     is_active = Column(Boolean, default=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     routine_logs = relationship("RoutineLog", back_populates="routine", cascade="all, delete-orphan")
 
@@ -54,7 +54,7 @@ class RoutineLog(Base):
     id = Column(GUID(), primary_key=True, default=lambda: str(uuid.uuid4()))
     routine_id = Column(GUID(), ForeignKey("routines.id", ondelete="CASCADE"), nullable=False)
     user_id = Column(String, index=True, nullable=False)
-    completed_at = Column(DateTime, default=datetime.utcnow)
+    completed_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     date = Column(Date, default=date.today)
     notes = Column(String, nullable=True)
 
