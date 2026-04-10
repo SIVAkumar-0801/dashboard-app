@@ -31,7 +31,6 @@ def habit_analytics(
     for habit in habits:
         streaks = calculate_streak(habit.id, db)
         rate = habit_rate(habit.id, db, days=30)
-        total = db.query(Habit).join(Habit.habit_logs).filter(Habit.id == habit.id).count()
         result.append(
             HabitAnalytics(
                 habit_id=habit.id,

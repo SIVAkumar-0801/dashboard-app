@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, date
 from sqlalchemy import Column, String, Integer, Float, DateTime, Date, JSON
 from sqlalchemy.types import TypeDecorator, CHAR
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
@@ -35,7 +35,7 @@ class Analytics(Base):
 
     id = Column(GUID(), primary_key=True, default=lambda: str(uuid.uuid4()))
     user_id = Column(String, index=True, nullable=False)
-    snapshot_date = Column(Date, default=datetime.utcnow)
+    snapshot_date = Column(Date, default=date.today)
     total_habits = Column(Integer, default=0)
     habits_completed_today = Column(Integer, default=0)
     total_tasks = Column(Integer, default=0)
