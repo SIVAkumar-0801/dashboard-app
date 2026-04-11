@@ -1,0 +1,100 @@
+.app-shell {
+  min-height: 100vh;
+  padding: 48px 20px;
+  background: linear-gradient(180deg, #f6f8fb 0%, #eef3ff 100%);
+  color: #11213b;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.hero,
+.card-grid,
+.panel {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.hero h1 {
+  margin: 12px 0;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.1;
+}
+
+.eyebrow,
+.section-label,
+.metric-card span {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #4e6cb3;
+}
+
+.lede {
+  max-width: 640px;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #344564;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.metric-card,
+.panel {
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 24px 60px rgba(65, 91, 160, 0.12);
+}
+
+.metric-card {
+  padding: 20px;
+}
+
+.metric-card strong {
+  display: block;
+  margin-top: 12px;
+  font-size: 2rem;
+}
+
+.panel {
+  margin-top: 24px;
+  padding: 24px;
+}
+
+.panel h2 {
+  margin: 8px 0 0;
+}
+
+.task-list {
+  display: grid;
+  gap: 14px;
+  padding: 0;
+  margin: 24px 0 0;
+  list-style: none;
+}
+
+.task-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #f4f7ff;
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: #4e6cb3;
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    padding: 32px 16px;
+  }
+}
