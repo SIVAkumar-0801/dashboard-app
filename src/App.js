@@ -1,53 +1,229 @@
 import './App.css';
 
-const summaryCards = [
-  { label: 'Habits completed', value: '8/10' },
-  { label: 'Focus hours', value: '5.4h' },
-  { label: 'Tasks closed', value: '12' },
+const navItems = ['Billing', 'Inventory', 'Suppliers', 'Reports'];
+const stats = [
+  { label: 'Active Suppliers', value: '24' },
+  { label: 'Monthly Spend', value: '₹42.8k' },
+  { label: 'Pending Deliveries', value: '08' },
+  { label: 'Overdue Invoices', value: '02' },
 ];
-
-const todayItems = [
-  'Morning routine',
-  'Hydration check',
-  'Deep work sprint',
-  'Evening reflection',
+const entries = [
+  {
+    date: 'Oct 24, 2023',
+    supplier: 'Vardhman Textiles Ltd',
+    invoice: 'VT-99212',
+    qty: '1,200 m',
+    amount: '₹1,44,000',
+    status: 'COMPLETED',
+  },
+  {
+    date: 'Oct 22, 2023',
+    supplier: 'Raymond Fabrics',
+    invoice: 'RF-INV-88',
+    qty: '850 m',
+    amount: '₹2,12,500',
+    status: 'PENDING',
+  },
+  {
+    date: 'Oct 21, 2023',
+    supplier: "Siyaram's Silk Mills",
+    invoice: 'SIY-00441',
+    qty: '2,400 m',
+    amount: '₹3,84,000',
+    status: 'DISPUTED',
+  },
+  {
+    date: 'Oct 19, 2023',
+    supplier: 'Bombay Dyeing',
+    invoice: 'BD-2023-X',
+    qty: '500 m',
+    amount: '₹62,000',
+    status: 'COMPLETED',
+  },
 ];
 
 function App() {
   return (
-    <main className="app-shell">
-      <section className="hero">
-        <p className="eyebrow">Personal dashboard</p>
-        <h1>Track habits, routines, and work from one place.</h1>
-        <p className="lede">
-          This starter view restores the missing React entrypoints so the app
-          can build again and gives the repo a working dashboard skeleton.
-        </p>
-      </section>
-
-      <section className="card-grid" aria-label="Summary metrics">
-        {summaryCards.map((card) => (
-          <article className="metric-card" key={card.label}>
-            <span>{card.label}</span>
-            <strong>{card.value}</strong>
-          </article>
-        ))}
-      </section>
-
-      <section className="panel">
+    <main className="layout">
+      <aside className="sidebar">
         <div>
-          <p className="section-label">Today</p>
-          <h2>Checklist</h2>
+          <div className="brand">Siva Textiles</div>
+          <p className="brand-subtitle">Modern ERP System</p>
+          <nav className="sidebar-nav" aria-label="Main navigation">
+            {navItems.map((item) => (
+              <button
+                key={item}
+                className={`nav-button ${item === 'Suppliers' ? 'active' : ''}`}
+                type="button"
+              >
+                <span className="nav-icon" aria-hidden="true">
+                  □
+                </span>
+                {item}
+              </button>
+            ))}
+          </nav>
         </div>
+        <div className="sidebar-footer">
+          <button type="button" className="nav-button">
+            <span className="nav-icon" aria-hidden="true">
+              ⚙
+            </span>
+            Settings
+          </button>
+          <button type="button" className="nav-button">
+            <span className="nav-icon" aria-hidden="true">
+              ?
+            </span>
+            Help
+          </button>
+        </div>
+      </aside>
 
-        <ul className="task-list">
-          {todayItems.map((item) => (
-            <li key={item}>
-              <span className="status-dot" aria-hidden="true" />
-              <span>{item}</span>
-            </li>
+      <section className="content">
+        <header className="topbar">
+          <h1>Siva Textiles ERP</h1>
+          <input
+            type="search"
+            className="search"
+            placeholder="Search supplier or invoice..."
+            aria-label="Search supplier or invoice"
+          />
+          <div className="top-icons">
+            <span>◴</span>
+            <span>◌</span>
+            <span className="avatar">⦿</span>
+          </div>
+        </header>
+
+        <section className="page-head">
+          <h2>Supplier Management</h2>
+          <p>Overview of procurement and supplier history.</p>
+        </section>
+
+        <section className="card form-card">
+          <div className="card-head">
+            <h3>Record Stock Receipt</h3>
+            <span>New Entry</span>
+          </div>
+
+          <div className="form-grid">
+            <label>
+              Supplier Name
+              <select defaultValue="">
+                <option value="" disabled>
+                  Select Supplier
+                </option>
+              </select>
+            </label>
+            <label>
+              Bill/Invoice Number
+              <input type="text" placeholder="e.g. INV-2023-001" />
+            </label>
+            <label>
+              Receipt Date
+              <input type="text" placeholder="mm/dd/yyyy" />
+            </label>
+            <label>
+              Total Quantity (Meters/Pcs)
+              <input type="text" value="0.00  UNIT" readOnly />
+            </label>
+            <label>
+              Total Amount
+              <input type="text" value="₹ 0.00" readOnly />
+            </label>
+            <button type="button" className="primary-button">
+              Record Transaction
+            </button>
+          </div>
+        </section>
+
+        <section className="stats-grid" aria-label="Supplier stats">
+          {stats.map((card) => (
+            <article key={card.label} className="card stat-card">
+              <p>{card.label}</p>
+              <strong>{card.value}</strong>
+            </article>
           ))}
-        </ul>
+        </section>
+
+        <section className="card table-card">
+          <div className="card-head">
+            <h3>Recent Supplier Entries</h3>
+            <button type="button" className="text-button">
+              Export CSV
+            </button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Supplier</th>
+                <th>Invoice #</th>
+                <th>Qty</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {entries.map((entry) => (
+                <tr key={entry.invoice}>
+                  <td>{entry.date}</td>
+                  <td>{entry.supplier}</td>
+                  <td>{entry.invoice}</td>
+                  <td>{entry.qty}</td>
+                  <td className="amount">{entry.amount}</td>
+                  <td>
+                    <span className={`tag ${entry.status.toLowerCase()}`}>
+                      {entry.status}
+                    </span>
+                  </td>
+                  <td>⋮</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="table-footer">
+            <span>Showing 4 of 128 entries</span>
+            <div className="pager">
+              <button type="button">Previous</button>
+              <button type="button" className="active-page">
+                1
+              </button>
+              <button type="button">Next</button>
+            </div>
+          </div>
+        </section>
+
+        <section className="bottom-grid">
+          <article className="card chart-card">
+            <h3>Supplier Performance</h3>
+            <div className="bars" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+              <span />
+              <span className="highlight" />
+              <span />
+            </div>
+            <p>Average delivery time has improved by 12% this month.</p>
+          </article>
+
+          <article className="card info-card">
+            <h3>Need New Suppliers?</h3>
+            <p>
+              Explore verified textile manufacturers and fabric wholesalers in
+              our curated directory.
+            </p>
+            <button type="button" className="secondary-button">
+              Open Directory
+            </button>
+          </article>
+        </section>
+        <button type="button" className="fab" aria-label="Add new entry">
+          +
+        </button>
       </section>
     </main>
   );
