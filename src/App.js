@@ -126,7 +126,7 @@ function App() {
             </label>
             <label>
               Total Quantity (Meters/Pcs)
-              <input type="text" value="0.00 UNIT" readOnly />
+              <input type="text" value="0.00 m" readOnly />
             </label>
             <label>
               Total Amount
