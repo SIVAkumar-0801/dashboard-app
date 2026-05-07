@@ -122,11 +122,11 @@ function App() {
             </label>
             <label>
               Receipt Date
-              <input type="text" placeholder="mm/dd/yyyy" />
+              <input type="date" />
             </label>
             <label>
               Total Quantity (Meters/Pcs)
-              <input type="text" value="0.00  UNIT" readOnly />
+              <input type="text" value="0.00 UNIT" readOnly />
             </label>
             <label>
               Total Amount
